@@ -22,6 +22,12 @@ app.use(express.static("public"));
 
 //for accessing cookies from user browser
 
-app.use(express.cookieParser());
+app.use(cookieParser());
+
+//routes
+import userRouter from "./routes/user.routes.js";
+
+//routes declaration
+app.use("/api/v1/users", userRouter);
 
 export default app;

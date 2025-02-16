@@ -1,10 +1,10 @@
 const asyncHandler = (requsetHandeler) => {
-  (req, res, next) => {
+  return (req, res, next) => {
     Promise.resolve(requsetHandeler(req, res, next)).catch((err) => next(err));
   };
 };
 
-export default asyncHandler;
+export { asyncHandler };
 
 // const exampleFunction = () => {};
 //   //higher order function
