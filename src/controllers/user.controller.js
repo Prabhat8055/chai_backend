@@ -339,7 +339,7 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
         from: "subscriptions",
         localField: "_id",
         foreignField: "subscribers",
-        as: "subscriberedTo",
+        as: "subscribedTo",
       },
     },
     {
@@ -365,8 +365,8 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
         fullName: 1,
         username: 1,
         subscribersCount: 1,
-        channelSubscribedToCount: 1,
-        isSubscribes: 1,
+        channelsSubscribedToCount: 1,
+        isSubscribed: 1,
         avatar: 1,
         coverImage: 1,
         email: 1,
@@ -393,42 +393,48 @@ const getWatchHistory = asyncHandler(async (req, res) => {
     {
       $lookup: {
         from: "videos",
-        localField:"watchHistory",
-        foreignField:"_id",
-        as:"watchHistory",
-        pipeline:[
+        localField: "watchHistory",
+        foreignField: "_id",
+        as: "watchHistory",
+        pipeline: [
           {
-            $lookup:{
-              from:"users",
-              localField:"owner",
-              foreignField:"_id",
-              as:"owner",
-              pipeline:[
+            $lookup: {
+              from: "users",
+              localField: "owner",
+              foreignField: "_id",
+              as: "owner",
+              pipeline: [
                 {
-                  $project:{
-                    fullName:1,
-                    userName:1,
-                    avatar:1
-                  }
-                }
-              ]
-            }
+                  $project: {
+                    fullName: 1,
+                    userName: 1,
+                    avatar: 1,
+                  },
+                },
+              ],
+            },
           },
           {
-            $addFields:{
-              owner:{
-                $first:"$owner"
-              }
-            }
-          }
-        ]
+            $addFields: {
+              owner: {
+                $first: "$owner",
+              },
+            },
+          },
+        ],
       },
     },
   ]);
 
-  return res.status(200).json(
-    new ApiResponce(200,user[0].watchHistory,"WatchHistory feteched successfully")
-  )
+  return res
+    .status(200)
+    .json(
+      new ApiResponce(
+        200,
+        user[0].watchHistory,
+        "WatchHistory feteched successfully"
+      )
+    );
 });
 
 export {
@@ -442,4 +448,5 @@ export {
   updateUserAvatar,
   updateUserCoverImage,
   getUserChannelProfile,
+  getWatchHistory,
 };
